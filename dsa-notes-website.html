@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSA Notes - Data Structures & Algorithms</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2D3561;
+            --secondary: #E63946;
+            --accent: #F77F00;
+            --bg: #F8F9FA;
+            --text: #1A1A1A;
+            --light: #FFFFFF;
+            --code-bg: #1E1E1E;
+            --success: #06D6A0;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255,255,255,0.03) 10px,
+                rgba(255,255,255,0.03) 20px
+            );
+            animation: drift 20s linear infinite;
+        }
+
+        @keyframes drift {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-50%, -50%); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 900px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: 900;
+            color: var(--light);
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(90deg, #F77F00, #E63946);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2vw, 1.5rem);
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 3rem;
+            font-weight: 400;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            cursor: pointer;
+            border: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: var(--light);
+            box-shadow: 0 10px 30px rgba(247, 127, 0, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(247, 127, 0, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.2);
+            color: var(--light);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-3px);
+        }
+
+        /* Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            background: var(--light);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 0;
+        }
+
+        nav li {
+            padding: 1.5rem 1.5rem;
+        }
+
+        nav a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        /* Sections */
+        section {
+            padding: 5rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            color: var(--primary);
+            margin-bottom: 3rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 5px;
+            background: var(--accent);
+            margin: 1rem auto;
+            border-radius: 3px;
+        }
+
+        /* Unit Cards */
+        .units-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .unit-card {
+            background: var(--light);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .unit-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent), var(--secondary));
+        }
+
+        .unit-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            border-color: var(--accent);
+        }
+
+        .unit-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--accent);
+            opacity: 0.2;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+
+        .unit-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .unit-card p {
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+
+        .topics-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .topics-list li {
+            padding: 0.5rem 0;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+        }
+
+        .topics-list li::before {
+            content: '▸';
+            color: var(--accent);
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 2rem;
+            background: var(--light);
+            border-radius: 15px;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: scale(1.05);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        /* Code Example */
+        .code-example {
+            background: var(--code-bg);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            color: #ABB2BF;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .code-example pre {
+            margin: 0;
+        }
+
+        .code-comment {
+            color: #5C6370;
+        }
+
+        .code-keyword {
+            color: #C678DD;
+        }
+
+        .code-function {
+            color: #61AFEF;
+        }
+
+        .code-string {
+            color: #98C379;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: var(--light);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .slide-in-left {
+            animation: slideInLeft 0.8s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            nav li {
+                padding: 1rem;
+            }
+        }
+
+        /* Quick Links */
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .quick-link {
+            background: linear-gradient(135deg, var(--primary), #1e3a5f);
+            padding: 2rem;
+            border-radius: 15px;
+            color: var(--light);
+            text-decoration: none;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .quick-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        .quick-link h4 {
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-20px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+        }
+
+        .scroll-indicator span {
+            display: block;
+            width: 30px;
+            height: 50px;
+            border: 2px solid rgba(255,255,255,0.5);
+            border-radius: 25px;
+            position: relative;
+        }
+
+        .scroll-indicator span::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 50%;
+            animation: scroll 2s infinite;
+        }
+
+        @keyframes scroll {
+            0% {
+                opacity: 1;
+                top: 10px;
+            }
+            100% {
+                opacity: 0;
+                top: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="hero-content">
+            <h1>Data Structures <span>&</span> Algorithms</h1>
+            <p class="hero-subtitle">Master the fundamentals of DSA with comprehensive notes, examples, and programs</p>
+            <div class="cta-buttons">
+                <a href="#units" class="btn btn-primary">Explore Units</a>
+                <a href="#programs" class="btn btn-secondary">View Programs</a>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <span></span>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="#introduction">Introduction</a></li>
+            <li><a href="#units">Units</a></li>
+            <li><a href="#sorting">Sorting</a></li>
+            <li><a href="#searching">Searching</a></li>
+            <li><a href="#trees">Trees</a></li>
+            <li><a href="#programs">Programs</a></li>
+        </ul>
+    </nav>
+
+    <!-- Introduction Section -->
+    <section id="introduction">
+        <h2 class="section-title">Course Overview</h2>
+        <div class="features-grid">
+            <div class="feature-card fade-in">
+                <div class="feature-icon">📚</div>
+                <h3>5 Comprehensive Units</h3>
+                <p>From basic algorithms to advanced tree structures</p>
+            </div>
+            <div class="feature-card fade-in" style="animation-delay: 0.1s;">
+                <div class="feature-icon">💻</div>
+                <h3>10+ Programs</h3>
+                <p>Complete implementation with source code</p>
+            </div>
+            <div class="feature-card fade-in" style="animation-delay: 0.2s;">
+                <div class="feature-icon">🎯</div>
+                <h3>Practical Examples</h3>
+                <p>Real-world applications and use cases</p>
+            </div>
+            <div class="feature-card fade-in" style="animation-delay: 0.3s;">
+                <div class="feature-icon">⚡</div>
+                <h3>Complexity Analysis</h3>
+                <p>Time and space complexity for all algorithms</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Units Section -->
+    <section id="units">
+        <h2 class="section-title">Course Units</h2>
+        <div class="units-grid">
+            <div class="unit-card">
+                <span class="unit-number">I</span>
+                <h3>Algorithms & Data Structures</h3>
+                <p><strong>12 Classes</strong></p>
+                <ul class="topics-list">
+                    <li>Algorithm Properties</li>
+                    <li>Performance Analysis</li>
+                    <li>Time & Space Complexity</li>
+                    <li>Asymptotic Notations (O, Ω, θ)</li>
+                    <li>Data Structure Types</li>
+                </ul>
+            </div>
+
+            <div class="unit-card">
+                <span class="unit-number">II</span>
+                <h3>Stacks & Queues</h3>
+                <p><strong>12 Classes</strong></p>
+                <ul class="topics-list">
+                    <li>Stack Operations (Push, Pop)</li>
+                    <li>Infix to Postfix Conversion</li>
+                    <li>Postfix Evaluation</li>
+                    <li>Queue Operations</li>
+                    <li>Circular & Priority Queues</li>
+                </ul>
+            </div>
+
+            <div class="unit-card">
+                <span class="unit-number">III</span>
+                <h3>Linked Lists</h3>
+                <p><strong>12 Classes</strong></p>
+                <ul class="topics-list">
+                    <li>Singly Linked Lists</li>
+                    <li>Circular Linked Lists</li>
+                    <li>Doubly Linked Lists</li>
+                    <li>Polynomial Representation</li>
+                    <li>Stack & Queue Implementation</li>
+                </ul>
+            </div>
+
+            <div class="unit-card">
+                <span class="unit-number">IV</span>
+                <h3>Sorting & Searching</h3>
+                <p><strong>12 Classes</strong></p>
+                <ul class="topics-list">
+                    <li>Selection, Bubble, Insertion Sort</li>
+                    <li>Merge Sort, Quick Sort</li>
+                    <li>Heap Sort</li>
+                    <li>Linear & Binary Search</li>
+                    <li>Fibonacci Search</li>
+                </ul>
+            </div>
+
+            <div class="unit-card">
+                <span class="unit-number">V</span>
+                <h3>Trees & Binary Trees</h3>
+                <p><strong>12 Classes</strong></p>
+                <ul class="topics-list">
+                    <li>Tree Terminologies</li>
+                    <li>Binary Tree Types</li>
+                    <li>Tree Traversals</li>
+                    <li>Binary Search Trees</li>
+                    <li>Tree Representations</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sorting Algorithms -->
+    <section id="sorting">
+        <h2 class="section-title">Sorting Algorithms</h2>
+        <div class="quick-links">
+            <a href="#" class="quick-link">
+                <h4>Selection Sort</h4>
+                <p>O(n²) complexity</p>
+            </a>
+            <a href="#" class="quick-link">
+                <h4>Bubble Sort</h4>
+                <p>O(n²) complexity</p>
+            </a>
+            <a href="#" class="quick-link">
+                <h4>Insertion Sort</h4>
+                <p>O(n²) complexity</p>
+            </a>
+            <a href="#" class="quick-link">
+                <h4>Merge Sort</h4>
+                <p>O(n log n) complexity</p>
+            </a>
+            <a href="#" class="quick-link">
+                <h4>Quick Sort</h4>
+                <p>O(n log n) avg complexity</p>
+            </a>
+            <a href="#" class="quick-link">
+                <h4>Heap Sort</h4>
+                <p>O(n log n) complexity</p>
+            </a>
+        </div>
+
+        <div class="code-example">
+            <pre><code><span class="code-comment">// Quick Sort Example</span>
+<span class="code-keyword">void</span> <span class="code-function">quick</span>(<span class="code-keyword">int</span> a[], <span class="code-keyword">int</span> lb, <span class="code-keyword">int</span> ub) {
+    <span class="code-keyword">int</span> i, j, t, key;
+    <span class="code-keyword">if</span>(lb > ub) <span class="code-keyword">return</span>;
+    
+    i = lb;
+    j = ub;
+    key = lb;
+    
+    <span class="code-keyword">while</span>(i < j) {
+        <span class="code-keyword">while</span>(a[key] > a[i]) i++;
+        <span class="code-keyword">while</span>(a[key] < a[j]) j--;
+        
+        <span class="code-keyword">if</span>(i < j) {
+            t = a[i];
+            a[i] = a[j];
+            a[j] = t;
+        }
+    }
+    
+    <span class="code-comment">// Recursively sort partitions</span>
+    quick(a, 0, j-1);
+    quick(a, j+1, ub);
+}</code></pre>
+        </div>
+    </section>
+
+    <!-- Searching Algorithms -->
+    <section id="searching">
+        <h2 class="section-title">Searching Algorithms</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>Linear Search</h3>
+                <p>Sequential search through elements</p>
+                <p><strong>Complexity:</strong> O(n)</p>
+            </div>
+            <div class="feature-card">
+                <h3>Binary Search</h3>
+                <p>Divide and conquer on sorted arrays</p>
+                <p><strong>Complexity:</strong> O(log n)</p>
+            </div>
+            <div class="feature-card">
+                <h3>Fibonacci Search</h3>
+                <p>Uses Fibonacci numbers for searching</p>
+                <p><strong>Complexity:</strong> O(log n)</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trees Section -->
+    <section id="trees">
+        <h2 class="section-title">Tree Data Structures</h2>
+        <div class="units-grid">
+            <div class="unit-card">
+                <h3>Tree Terminology</h3>
+                <ul class="topics-list">
+                    <li>Root, Parent, Child</li>
+                    <li>Leaf & Internal Nodes</li>
+                    <li>Height & Depth</li>
+                    <li>Degree & Level</li>
+                </ul>
+            </div>
+            <div class="unit-card">
+                <h3>Binary Tree Types</h3>
+                <ul class="topics-list">
+                    <li>Strictly Binary Tree</li>
+                    <li>Complete Binary Tree</li>
+                    <li>Extended Binary Tree</li>
+                    <li>Skewed Binary Tree</li>
+                </ul>
+            </div>
+            <div class="unit-card">
+                <h3>Tree Traversals</h3>
+                <ul class="topics-list">
+                    <li>In-Order (Left-Root-Right)</li>
+                    <li>Pre-Order (Root-Left-Right)</li>
+                    <li>Post-Order (Left-Right-Root)</li>
+                    <li>Level-Order Traversal</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Programs Section -->
+    <section id="programs">
+        <h2 class="section-title">Implementation Programs</h2>
+        <div class="quick-links">
+            <a href="#" class="quick-link">
+                <h4>Stack using Arrays</h4>
+                <p>Push, Pop, Display</p>
+            </a>
+            <a href="#" class="quick-link">
+                <h4>Queue using Arrays</h4>
+                <p>Insertion, Deletion</p>
+            </a>
+            <a href="#" class="quick-link">
+                <h4>Infix to Postfix</h4>
+                <p>Expression Conversion</p>
+            </a>
+            <a href="#" class="quick-link">
+                <h4>Priority Queue</h4>
+                <p>Priority-based Operations</p>
+            </a>
+            <a href="#" class="quick-link">
+                <h4>Circular Queue</h4>
+                <p>Circular Implementation</p>
+            </a>
+            <a href="#" class="quick-link">
+                <h4>Singly Linked List</h4>
+                <p>Insert, Delete, Display</p>
+            </a>
+            <a href="#" class="quick-link">
+                <h4>Doubly Linked List</h4>
+                <p>Bidirectional Operations</p>
+            </a>
+            <a href="#" class="quick-link">
+                <h4>All Sorting Algorithms</h4>
+                <p>6 Different Sorts</p>
+            </a>
+            <a href="#" class="quick-link">
+                <h4>Binary Tree Traversals</h4>
+                <p>Inorder, Preorder, Postorder</p>
+            </a>
+            <a href="#" class="quick-link">
+                <h4>Tree Balancing</h4>
+                <p>Balance a Given Tree</p>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <h3>Data Structures & Algorithms</h3>
+        <p>Course Code: 22DS212</p>
+        <p style="margin-top: 1rem; opacity: 0.8;">
+            © 2026 DSA Notes | All algorithms and programs included
+        </p>
+    </footer>
+
+    <script>
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards
+        document.querySelectorAll('.unit-card, .feature-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>
